@@ -1,8 +1,26 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Copy, Check, FileText } from 'lucide-react';
 
 const TranscriptionEditor = ({ text, onChange }) => {
   const [copied, setCopied] = useState(false);
+  const editableRef = useRef(null);
+  const isInternalUpdate = useRef(false);
+
+  // Sync external text changes to the contentEditable div
+  useEffect(() => {
+    if (editableRef.current && !isInternalUpdate.current) {
+      // Only update if the content is different (external change like new transcription)
+      if (editableRef.current.textContent !== text) {
+        editableRef.current.textContent = text;
+      }
+    }
+    isInternalUpdate.current = false;
+  }, [text]);
+
+  const handleInput = (e) => {
+    isInternalUpdate.current = true;
+    onChange(e.currentTarget.textContent);
+  };
 
   const handleCopy = async () => {
     try {
@@ -44,17 +62,16 @@ const TranscriptionEditor = ({ text, onChange }) => {
 
       {/* Editable Text Area */}
       <div
+        ref={editableRef}
         contentEditable
         suppressContentEditableWarning
-        onInput={(e) => onChange(e.currentTarget.textContent)}
+        onInput={handleInput}
         className="min-h-[200px] p-6 bg-slate-50 rounded-lg border-2 border-slate-200 focus:border-primary focus:outline-none text-slate-800 leading-relaxed transition-colors duration-200"
         style={{
           whiteSpace: 'pre-wrap',
           wordWrap: 'break-word',
         }}
-      >
-        {text}
-      </div>
+      />
 
       {/* Helper text */}
       <p className="text-sm text-slate-500 italic">
