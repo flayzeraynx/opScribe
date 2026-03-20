@@ -8,6 +8,15 @@
 
 export const WEBHOOK_URL = "https://lqo5pm48.rpcld.cc/webhook/transcribe";
 
+// Hint the backend about the expected spoken language to improve accuracy.
+// Use ISO-639-1, for example: 'en', 'tr', 'de'
+export const TRANSCRIPTION_LANGUAGE = 'en';
+
+// Optional style hint for the transcription provider.
+// Keep this in the same language as the recorded speech.
+export const TRANSCRIPTION_PROMPT =
+  'This is a clear English voice note. Preserve punctuation and medical terminology where spoken.';
+
 // Supported audio MIME types (browser dependent)
 export const AUDIO_MIME_TYPES = [
   'audio/webm',

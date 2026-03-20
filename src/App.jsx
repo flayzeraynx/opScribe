@@ -1,7 +1,11 @@
 import { useState } from 'react';
 import AudioRecorder from './components/AudioRecorder';
 import TranscriptionEditor from './components/TranscriptionEditor';
-import { WEBHOOK_URL } from './config';
+import {
+  WEBHOOK_URL,
+  TRANSCRIPTION_LANGUAGE,
+  TRANSCRIPTION_PROMPT,
+} from './config';
 import { Loader2, AlertCircle } from 'lucide-react';
 
 function App() {
@@ -24,6 +28,8 @@ function App() {
       // Create FormData for multipart/form-data upload
       const formData = new FormData();
       formData.append('file', blob, 'recording.webm');
+      formData.append('language', TRANSCRIPTION_LANGUAGE);
+      formData.append('prompt', TRANSCRIPTION_PROMPT);
 
       // Send to N8N webhook
       const response = await fetch(WEBHOOK_URL, {
